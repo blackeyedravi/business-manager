@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card p-4 shadow" style="max-width:500px;margin:auto;">
+    <h3 class="text-danger">Delete Supplier</h3>
+    <p>Are you sure you want to delete <strong>{{ supplier.name }}</strong>?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn btn-danger">Yes, Delete</button>
+        <a href="{% url 'supplier_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

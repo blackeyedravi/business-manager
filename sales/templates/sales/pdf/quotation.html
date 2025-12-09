@@ -1,0 +1,33 @@
+{% extends "sales/pdf/pdf_base.html" %}
+
+
+{% block content %}
+
+<p><strong>Quotation No:</strong> {{ quotation.number }}</p>
+<p><strong>Customer:</strong> {{ quotation.customer.name }}</p>
+<p><strong>Date:</strong> {{ quotation.date }}</p>
+<p><strong>Status:</strong> {{ quotation.status }}</p>
+
+<table>
+    <tr>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Unit Price</th>
+        <th>Total</th>
+    </tr>
+
+    {% for item in quotation.items.all %}
+    <tr>
+        <td>{{ item.product.name|default:"Deleted Product" }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>P{{ item.price }}</td>
+        <td>P{{ item.line_total }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<div class="total-box">
+    Total: P{{ quotation.total_amount }}
+</div>
+
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="fw-bold mb-4">🧾 Invoice #{{ invoice.number }}</h3>
+
+<!-- INVOICE HEADER -->
+<div class="card shadow p-4 mb-4">
+
+    <div class="d-flex justify-content-between align-items-start">
+        <div>
+            <h5 class="fw-bold">Customer: {{ invoice.customer.name }}</h5>
+            <p class="mb-1">Date: {{ invoice.date }}</p>
+
+            <p>
+                Status:
+                {% if invoice.status == "Unpaid" %}
+                    <span class="badge bg-danger">Unpaid</span>
+                {% elif invoice.status == "Partially Paid" %}
+                    <span class="badge bg-warning text-dark">Partially Paid</span>
+                {% elif invoice.status == "Paid" %}
+                    <span class="badge bg-success">Paid</span>
+                {% else %}
+                    <span class="badge bg-secondary">{{ invoice.status }}</span>
+                {% endif %}
+            </p>
+
+            <p class="fw-bold">Total Amount: P{{ invoice.total_amount }}</p>
+            <p class="fw-bold">Amount Received: P{{ invoice.amount_received }}</p>
+            <p class="fw-bold">Balance Due: P{{ invoice.balance_due }}</p>
+        </div>
+
+        <!-- ✅ ACTION BUTTONS -->
+        <div class="text-end">
+            <a href="{% url 'receipt_create' invoice.id %}" class="btn btn-success btn-sm mb-2">
+                ➕ Add Payment
+            </a>
+
+            <a href="{% url 'invoice_pdf' invoice.id %}" class="btn btn-secondary btn-sm mb-2">
+                📄 Download PDF
+            </a>
+
+            {% if invoice.status != "Paid" %}
+            <form method="post"
+                  action="{% url 'invoice_delete' invoice.id %}"
+                  class="mt-2">
+                {% csrf_token %}
+                <button type="submit"
+                        class="btn btn-danger btn-sm"
+                        onclick="return confirm('Are you sure you want to delete this invoice? This action cannot be undone.')">
+                    🗑 Delete Invoice
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+<!-- INVOICE ITEMS TABLE -->
+<div class="card shadow p-4 mb-4">
+
+    <h5 class="fw-bold mb-3">Invoice Items</h5>
+
+    <table class="table table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Unit Price</th>
+                <th>Line Total</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>
+                    {% if item.product %}
+                        {{ item.product.name }}
+                    {% else %}
+                        <em class="text-muted">Deleted Product</em>
+                    {% endif %}
+                </td>
+                <td>{{ item.quantity }}</td>
+                <td>P{{ item.price }}</td>
+                <td>P{{ item.line_total }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center text-muted">No items found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h4 class="fw-bold text-end">Total: P{{ invoice.total_amount }}</h4>
+</div>
+
+{% endblock %}

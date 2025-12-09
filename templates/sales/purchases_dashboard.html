@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="fw-bold mb-4">📥 Purchases & Sales Documents</h3>
+
+<div class="row g-3 mb-4">
+
+    <!-- QUOTATIONS -->
+    <div class="col-md-3">
+        <div class="card shadow-sm p-3">
+            <h6 class="text-muted mb-1">Quotations</h6>
+            <h3>{{ total_quotations }}</h3>
+
+            <a href="{% url 'quotation_create' %}" class="btn btn-sm btn-primary mt-2 w-100">
+                ➕ Create Quotation
+            </a>
+
+            <a href="{% url 'quotation_list' %}" class="btn btn-sm btn-outline-primary mt-2 w-100">
+                View Quotations
+            </a>
+        </div>
+    </div>
+
+    <!-- INVOICES -->
+    <div class="col-md-3">
+        <div class="card shadow-sm p-3">
+            <h6 class="text-muted mb-1">Invoices</h6>
+            <h3>{{ total_invoices }}</h3>
+
+            <a href="{% url 'quotation_list' %}" class="btn btn-sm btn-primary mt-2 w-100">
+                ➕ Create Invoice (From Quotation)
+            </a>
+
+            <a href="{% url 'invoice_list' %}" class="btn btn-sm btn-outline-primary mt-2 w-100">
+                View Invoices
+            </a>
+        </div>
+    </div>
+
+    <!-- RECEIPTS -->
+    <div class="col-md-3">
+        <div class="card shadow-sm p-3">
+            <h6 class="text-muted mb-1">Receipts</h6>
+            <h3>{{ total_receipts }}</h3>
+
+            <a href="{% url 'invoice_list' %}" class="btn btn-sm btn-primary mt-2 w-100">
+                ➕ Create Receipt (Select Invoice)
+            </a>
+
+            <a href="{% url 'receipt_list' %}" class="btn btn-sm btn-outline-primary mt-2 w-100">
+                View Receipts
+            </a>
+        </div>
+    </div>
+
+    <!-- SALES SUMMARY -->
+    <div class="col-md-3">
+        <div class="card shadow-sm p-3">
+            <h6 class="text-muted mb-1">Total Sales</h6>
+            <h3>P{{ total_sales }}</h3>
+
+            <a href="{% url 'sales_summary' %}" class="btn btn-sm btn-outline-success mt-2 w-100">
+                Sales Summary
+            </a>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

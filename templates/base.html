@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Business Manager{% endblock %}</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Layout Styles -->
+    <style>
+        :root {
+            --sidebar-bg: #1e1f29;
+            --sidebar-accent: #4f46e5;
+            --sidebar-text: #dcdcdc;
+            --sidebar-text-active: #ffffff;
+            --body-bg: #f5f6fa;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--body-bg);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .app-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            padding: 20px 18px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .sidebar-logo {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #4f46e5, #f97316);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #fff;
+            font-size: 18px;
+        }
+
+        .sidebar-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        .sidebar-subtitle {
+            font-size: 11px;
+            color: #9ca3af;
+            margin: 0;
+        }
+
+        .sidebar-section-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #9ca3af;
+            margin: 12px 4px 4px;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 10px;
+            flex: 1;
+        }
+
+        .sidebar-nav-item {
+            margin-bottom: 4px;
+        }
+
+        .sidebar-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.15s ease, color 0.15s ease, transform 0.05s ease;
+        }
+
+        .sidebar-nav-link span.icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-nav-link:hover {
+            background: rgba(79, 70, 229, 0.25);
+            color: var(--sidebar-text-active);
+            transform: translateX(1px);
+        }
+
+        .sidebar-nav-link.active {
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: var(--sidebar-text-active);
+        }
+
+        .sidebar-nav-link.active span.icon {
+            opacity: 1;
+        }
+
+        .sidebar-divider {
+            border-top: 1px solid rgba(148, 163, 184, 0.4);
+            margin: 12px 0;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .sidebar-footer a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .sidebar-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main layout */
+        .main-wrapper {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top bar */
+        .topbar {
+            height: 60px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 22px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .topbar-left h1 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+            color: #111827;
+        }
+
+        .topbar-left small {
+            display: block;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar-user {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            font-size: 13px;
+            color: #374151;
+        }
+
+        .topbar-user-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 999px;
+            background: #4f46e5;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Content */
+        .content {
+            padding: 20px 22px 28px;
+        }
+
+        .content-inner {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 18px 18px 22px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+            min-height: calc(100vh - 60px - 40px);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 220px;
+            }
+            .main-wrapper {
+                margin-left: 220px;
+                width: calc(100% - 220px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                transform: translateX(-100%);
+                transition: transform 0.2s ease-in-out;
+                z-index: 20;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .topbar {
+                padding: 0 14px;
+            }
+
+            .content {
+                padding: 14px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .content-inner {
+                padding: 14px;
+                border-radius: 10px;
+            }
+        }
+
+        {% block extra_css %}{% endblock %}
+    </style>
+</head>
+<body>
+
+<div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-logo">BM</div>
+            <div>
+                <p class="sidebar-title">Biz Manager</p>
+                <p class="sidebar-subtitle">Control Panel</p>
+            </div>
+        </div>
+
+        <p class="sidebar-section-label">Main</p>
+        <ul class="sidebar-nav">
+            <li class="sidebar-nav-item">
+                <a href="{% url 'dashboard' %}" class="sidebar-nav-link">
+                    <span class="icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="/crm/customers/" class="sidebar-nav-link">
+                    <span class="icon">👥</span>
+                    <span>Customers</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="/crm/suppliers/" class="sidebar-nav-link">
+                    <span class="icon">🏭</span>
+                    <span>Suppliers</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="/inventory/" class="sidebar-nav-link">
+                    <span class="icon">📦</span>
+                    <span>Products</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="/sales/orders/" class="sidebar-nav-link">
+                    <span class="icon">🧾</span>
+                    <span>Orders</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="{% url 'sales_documents_dashboard' %}" class="sidebar-nav-link">
+                    <span class="icon">📥</span>
+                    <span>Purchases</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="/hr/employees/" class="sidebar-nav-link">
+                    <span class="icon">👨‍💼</span>
+                    <span>Employees</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="sidebar-divider"></div>
+
+        <div class="sidebar-footer">
+            <div class="mb-2">
+                <a href="{% url 'logout' %}" class="sidebar-nav-link" style="padding-left: 0;">
+                    <span class="icon">🚪</span>
+                    <span>Logout</span>
+                </a>
+            </div>
+            <div>© {% now "Y" %} Business Manager</div>
+        </div>
+    </aside>
+
+    <!-- Main content -->
+    <div class="main-wrapper">
+
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <h1>{% block page_heading %}Business Manager{% endblock %}</h1>
+                <small>{% block page_subtitle %}Manage your operations in one place{% endblock %}</small>
+            </div>
+
+            <div class="topbar-right">
+                <!-- Mobile sidebar toggle -->
+                <button class="btn btn-sm btn-outline-secondary d-md-none" type="button" id="sidebarToggle">
+                    ☰
+                </button>
+
+                <div class="topbar-user">
+                    <div class="topbar-user-avatar">
+                        {{ request.user.first_name|default:"U"|first|upper }}
+                    </div>
+                    <div>
+                        <div style="font-weight: 500;">
+                            {{ request.user.get_full_name|default:request.user.username }}
+                        </div>
+                        <div style="font-size: 11px; color: #6b7280;">
+                            Logged in
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page content -->
+        <main class="content">
+            <div class="content-inner">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+
+    </div>
+</div>
+
+<!-- Bootstrap JS (needed for modals, dropdowns, etc., and fixes your "Add Item" button issues) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Mobile sidebar toggle
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+
+    if (sidebarToggle && sidebar) {
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+    }
+</script>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

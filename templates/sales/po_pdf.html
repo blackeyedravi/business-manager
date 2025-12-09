@@ -1,0 +1,158 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Purchase Order #{{ po.id }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            color: #333;
+        }
+        .header {
+            border-bottom: 2px solid #0d6efd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .logo {
+            float: left;
+        }
+        .company-details {
+            float: right;
+            text-align: right;
+            font-size: 11px;
+        }
+        .clearfix {
+            clear: both;
+        }
+        .po-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 20px 0 5px 0;
+        }
+        .meta-table {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .meta-table td {
+            vertical-align: top;
+            padding: 2px 0;
+        }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .items-table th,
+        .items-table td {
+            border: 1px solid #ccc;
+            padding: 6px 8px;
+        }
+        .items-table th {
+            background: #f0f0f0;
+            text-align: left;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .totals {
+            margin-top: 10px;
+            width: 100%;
+        }
+        .totals td {
+            padding: 4px 8px;
+        }
+        .totals .label {
+            text-align: right;
+            font-weight: bold;
+        }
+        .totals .value {
+            text-align: right;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 10px;
+            text-align: center;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER WITH LOGO + COMPANY DETAILS -->
+<div class="header">
+    <div class="logo">
+        <!-- Make sure logo_url is passed from the view -->
+        <img src="{{ logo_url }}" alt="Logo" style="height:60px;">
+    </div>
+    <div class="company-details">
+        <strong>{{ company.name|default:"Business Manager" }}</strong><br>
+        {{ company.address|default:"Gaborone, Botswana" }}<br>
+        Tel: {{ company.phone|default:"+267 000 0000" }}<br>
+        Email: {{ company.email|default:"info@example.com" }}
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+<!-- TITLE -->
+<div class="po-title">Purchase Order #{{ po.id }}</div>
+
+<!-- PO + SUPPLIER INFO -->
+<table class="meta-table">
+    <tr>
+        <td>
+            <strong>Supplier:</strong> {{ po.supplier.name }}<br>
+            {% if po.supplier.company_name %}{{ po.supplier.company_name }}<br>{% endif %}
+            {% if po.supplier.phone %}Tel: {{ po.supplier.phone }}<br>{% endif %}
+            {% if po.supplier.email %}Email: {{ po.supplier.email }}{% endif %}
+        </td>
+        <td class="text-right">
+            <strong>Date:</strong> {{ po.date }}<br>
+            <strong>Status:</strong> {{ po.status }}
+        </td>
+    </tr>
+</table>
+
+<!-- ITEMS TABLE -->
+<table class="items-table">
+    <thead>
+        <tr>
+            <th style="width: 45%;">Product</th>
+            <th style="width: 15%;">Qty</th>
+            <th style="width: 20%;">Cost</th>
+            <th style="width: 20%;">Line Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td class="text-right">{{ item.quantity }}</td>
+            <td class="text-right">P{{ item.cost_price }}</td>
+            <td class="text-right">P{{ item.line_total }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" style="text-align:center; color:#777;">
+                No items added.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- TOTALS -->
+<table class="totals">
+    <tr>
+        <td class="label">Total:</td>
+        <td class="value">P{{ po.total_amount }}</td>
+    </tr>
+</table>
+
+<div class="footer">
+    This is a system generated purchase order from Business Manager.
+</div>
+
+</body>
+</html>

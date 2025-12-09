@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="fw-bold mb-4">💵 Record Payment for Invoice {{ invoice.number }}</h3>
+{% comment %} <a href="{% url 'receipt_pdf' invoice.id receipt.id %}" class="btn btn-secondary">
+    📄 Download Receipt PDF
+</a> {% endcomment %}
+
+
+<div class="card shadow p-4 mb-4">
+    <h5 class="fw-bold">Customer: {{ invoice.customer.name }}</h5>
+    <p>Date: {{ invoice.date }}</p>
+    <p>Status:
+        {% if invoice.status == "Paid" %}
+            <span class="badge bg-success">Paid</span>
+        {% elif invoice.status == "Partially Paid" %}
+            <span class="badge bg-warning text-dark">Partially Paid</span>
+        {% else %}
+            <span class="badge bg-danger">Unpaid</span>
+        {% endif %}
+    </p>
+
+    <h5 class="fw-bold mt-3">Total Amount: P{{ invoice.total_amount }}</h5>
+    <h5 class="fw-bold">Amount Received: P{{ invoice.amount_received }}</h5>
+    <h5 class="fw-bold">Balance Due: P{{ invoice.balance_due }}</h5>
+</div>
+
+
+<!-- PAYMENT FORM -->
+<div class="card shadow p-4">
+    <h5 class="fw-bold mb-3">Enter Payment</h5>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Amount Paid</label>
+            <input type="number" name="amount_paid" step="0.01" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Payment Method</label>
+            <select name="payment_method" class="form-select">
+                <option value="Cash">Cash</option>
+                <option value="Card">Card</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="Mobile Money">Mobile Money</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Notes (optional)</label>
+            <textarea name="notes" class="form-control" rows="3"></textarea>
+        </div>
+
+        <button class="btn btn-success">Save Payment</button>
+
+        <a href="{% url 'invoice_detail' invoice.id %}" class="btn btn-secondary ms-2">
+            Cancel
+        </a>
+    </form>
+</div>
+
+{% endblock %}

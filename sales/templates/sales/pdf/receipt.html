@@ -1,0 +1,15 @@
+{% extends "sales/pdf/base.html" %}
+
+{% block content %}
+
+<p><strong>Receipt No:</strong> {{ receipt.number }}</p>
+<p><strong>Invoice No:</strong> {{ invoice.number }}</p>
+<p><strong>Customer:</strong> {{ invoice.customer.name }}</p>
+<p><strong>Date:</strong> {{ receipt.date }}</p>
+<p><strong>Payment Method:</strong> {{ receipt.payment_method }}</p>
+
+<div class="total-box">
+    Amount Paid: P{{ receipt.amount_paid }}
+</div>
+
+{% endblock %}

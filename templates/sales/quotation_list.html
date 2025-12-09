@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="fw-bold mb-4">📄 Quotations</h3>
+
+<div class="d-flex justify-content-end mb-3">
+    <a href="{% url 'quotation_create' %}" class="btn btn-primary">
+        ➕ Create Quotation
+    </a>
+</div>
+
+<div class="card shadow-sm p-3">
+
+    <table class="table table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Quotation No.</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for q in quotations %}
+            <tr>
+                <td>{{ q.number }}</td>
+                <td>{{ q.customer.name }}</td>
+                <td>{{ q.date }}</td>
+                <td>{{ q.status }}</td>
+                <td>P{{ q.total_amount }}</td>
+
+                <td>
+                    <a href="{% url 'quotation_detail' q.id %}" class="btn btn-sm btn-secondary">
+                        View
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-muted">No quotations found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

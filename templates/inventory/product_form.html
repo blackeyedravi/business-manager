@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card shadow p-4" style="max-width: 650px; margin: auto;">
+    <h3 class="fw-bold mb-3">
+        🥩 {{ title|default:"Add Animal / Meat Product" }}
+    </h3>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Animal Type -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Animal Type</label>
+            {{ form.animal_type }}
+        </div>
+
+        <!-- Meat Type -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Meat Type</label>
+            {{ form.meat_type }}
+        </div>
+
+        <!-- Weight -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Weight (KG)</label>
+            {{ form.weight_kg }}
+            <div class="form-text">
+                Actual weight of the animal or meat pack
+            </div>
+        </div>
+
+        <!-- Cost Price per KG -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Cost Price per KG (Pula.Thebe)</label>
+            {{ form.cost_price_per_kg }}
+        </div>
+
+        <!-- Selling Price per KG -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Selling Price per KG (Pula.Thebe)</label>
+            {{ form.selling_price_per_kg }}
+        </div>
+
+        <!-- Stock -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Stock Quantity</label>
+            {{ form.stock }}
+            <div class="form-text">
+                Number of animals or packs
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Info Note -->
+        <div class="alert alert-info py-2">
+            🏷️ After saving, you will be able to print a small label
+            to stick on the animal or meat pack.
+        </div>
+
+        <!-- Buttons -->
+        <button class="btn btn-success mt-2">
+            💾 Save Product
+        </button>
+
+        <a href="{% url 'product_list' %}" class="btn btn-secondary mt-2 ms-2">
+            Cancel
+        </a>
+    </form>
+</div>
+{% endblock %}
